@@ -21,7 +21,7 @@ public class Contato {
 	private Integer id;
 	
 	@Column
-	private String name;
+	private String nome;
 	
 	@Column
 	private String email;
