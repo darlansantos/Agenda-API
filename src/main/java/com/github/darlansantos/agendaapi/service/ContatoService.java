@@ -3,11 +3,10 @@ package com.github.darlansantos.agendaapi.service;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import com.github.darlansantos.agendaapi.domain.Contato;
+import com.github.darlansantos.agendaapi.exception.ResourceNotFoundException;
 import com.github.darlansantos.agendaapi.repository.ContatoRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -29,7 +28,7 @@ public class ContatoService {
 	public Optional<Contato> findById(Integer id) {
 		return Optional.of(contatoRepository
 				.findById(id)
-				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Contato não encontrado")));
+				.orElseThrow(() -> new ResourceNotFoundException("No records found for this ID")));
 	}
 
 	public void delete(Integer id) {
@@ -39,7 +38,7 @@ public class ContatoService {
 			contatoRepository.delete(contato);
 			return Void.TYPE;
 		})
-		.orElseThrow((() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Contato não encontrado")));
+		.orElseThrow((() -> new ResourceNotFoundException("No records found for this ID")));
 	}
 
 	public void update(Integer id, Boolean favorito) {
@@ -49,7 +48,7 @@ public class ContatoService {
 			contato.setFavorito(favorito);
 			return contatoRepository.save(contato);
 		})
-		.orElseThrow((() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Contato não encontrado")));
+		.orElseThrow((() -> new ResourceNotFoundException("No records found for this ID")));
 	}
 	
 }
