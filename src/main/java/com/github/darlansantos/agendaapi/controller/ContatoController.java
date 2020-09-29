@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.github.darlansantos.agendaapi.domain.Contato;
-import com.github.darlansantos.agendaapi.repository.ContatoRepository;
+import com.github.darlansantos.agendaapi.service.ContatoService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -24,41 +24,37 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/contatos")
 public class ContatoController {
 	
-	private final ContatoRepository contatoRepository; 
+	private final ContatoService contatoService; 
 	
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public Contato save(@RequestBody Contato contato) {
-		return contatoRepository.save(contato);
-	}
-	
-	@GetMapping("/{id}")
-	@ResponseStatus(HttpStatus.OK)
-	public Optional<Contato> findById(@PathVariable Integer id) {
-		  Optional<Contato> contato = contatoRepository.findById(id);
-		  return contato;
+		return contatoService.save(contato);
 	}
 	
 	@GetMapping
 	@ResponseStatus(HttpStatus.OK)
 	public List<Contato> findAll() {
-		  return contatoRepository.findAll();
+		return contatoService.findAll();
+	}
+	
+	@GetMapping("/{id}")
+	@ResponseStatus(HttpStatus.OK)
+	public Optional<Contato> findById(@PathVariable Integer id) {
+		  Optional<Contato> contato = contatoService.findById(id);
+		  return contato;
 	}
 	
 	@DeleteMapping("/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void delete(@PathVariable Integer id) {
-		contatoRepository.deleteById(id);
+		contatoService.delete(id);
 	}
 	
 	@PatchMapping("{id}/favorito")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void favorite(@PathVariable Integer id, @RequestBody Boolean favorito) {
-		Optional<Contato> contato = contatoRepository.findById(id);
-		contato.ifPresent(c -> {
-			c.setFavorito(favorito);
-			contatoRepository.save(c);
-		});
+	public void update(@PathVariable Integer id, @RequestBody Boolean favorito) {
+		contatoService.update(id, favorito);
 	}
 	
 }
